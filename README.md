@@ -12,7 +12,7 @@ Escreva um ou dois parágrafo resumindo o objetivo do seu projeto.
 ## Instruções de utilização
 Assim que a primeira versão do sistema estiver disponível, deverá complementar com as instruções de utilização. Descreva como instalar eventuais dependências e como executar a aplicação.
 
-##Histórias de Usuário 
+## Histórias de Usuário 
 - Como **usuário**, quero fazer login com usuário e senha para acessar minhas funcionalidades. ok
 - Como **usuário**, quero interagir com o sistema por menus simples em linha de comando para realizar as operações.
 
