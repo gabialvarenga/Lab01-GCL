@@ -16,18 +16,14 @@ Assim que a primeira versão do sistema estiver disponível, deverá complementa
 - Como **usuário**, quero fazer login com usuário e senha para acessar minhas funcionalidades. 
 
 - Como **secretário**, quero gerenciar disciplinas e cursos para manter o currículo do semestre organizado.
-- Como **secretário**, quero gerenciar alunos e professores para permitir acesso ao sistema.
-- Como **secretário**, quero abrir e fechar períodos de matrícula para controlar quando alunos podem se inscrever.
-- Como **secretário**, quero que o sistema cancele disciplinas com menos de 3 alunos no fechamento do período, para evitar turmas incompletas.
-- Como **secretário**, quero que o sistema bloqueie novas matrículas ao atingir 60 alunos, para respeitar o limite de alunos por turma. 
-- Como **secretário**, quero que os dados sejam salvos em arquivo para manter o histórico entre execuções.
-
+- Como **secretário**, quero gerenciar o currículo, para organizar cada semestre. 
+- Como **secretário**, quero gerenciarinformações sobre alunos e professores, para???????????????????????????????????????????????????????????????????
 
 - Como **aluno**, quero ver disciplinas disponíveis para escolher minhas inscrições.
-- Como **aluno**, quero me matricular em disciplinas durante o período aberto para garantir minha vaga. 
+- Como **aluno**, quero realizar matrícula, para cursar minhas disciplinas. 
 - Como **aluno**, quero cancelar minha matrícula durante o período aberto para ajustar minha grade.
-- Como aluno , quero selecionar até 4 disciplinas obrigatórias e 2 optativas, para que eu possa me matricular no semestre.
-- Como **aluno**, quero que o sistema impeça matrícula em disciplinas sem vagas para respeitar o limite máximo.
-- Como **aluno**, quero confirmar minha matrícula para que o sistema de cobrança seja notificado.
+
 
 - Como **professor**, quero ver a lista de alunos matriculados nas minhas disciplinas para acompanhar minha turma.
+
+- Como **tesoureiro**, quero gerar a cobrança da taxa de matrícula, para confirmar a matrícula. 
