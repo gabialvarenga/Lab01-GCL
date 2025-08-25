@@ -1,26 +1,37 @@
 package br.lab.model;
 
+import br.lab.enums.Role;
+
 public abstract class Usuario {
+    private int id;
     private String nome;
     private String email;
     private String senha;
+    private Role role;
     
     public Usuario() {
     }
     
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(int id, String nome, String email, String senha, Role role) {
+        this.id = id;
         this.nome = nome;
-        this.email = email;
+        this.email = email; 
         this.senha = senha;
+        this.role = role;
     }
     
     public boolean fazerLogin() {
-        // Implementação do método de autenticação
-        // Em um sistema real, isso verificaria as credenciais contra um banco de dados
         return true;
     }
     
-    // Getters e Setters
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getNome() {
         return nome;
     }
@@ -43,5 +54,13 @@ public abstract class Usuario {
     
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+    
+    public Role getRole() {
+        return role;
+    }
+    
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
