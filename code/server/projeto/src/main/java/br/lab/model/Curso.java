@@ -4,21 +4,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Curso {
-    private String id;
     private String nome;
-    private String descricao;
-    private int duracao;
+    private int totalCreditos;
     private List<Disciplina> disciplinas;
     
     public Curso() {
         this.disciplinas = new ArrayList<>();
     }
     
-    public Curso(String id, String nome, String descricao, int duracao) {
-        this.id = id;
+    public Curso(String nome, int totalCreditos) {
         this.nome = nome;
-        this.descricao = descricao;
-        this.duracao = duracao;
+        this.totalCreditos = totalCreditos;
         this.disciplinas = new ArrayList<>();
     }
     
@@ -37,14 +33,6 @@ public class Curso {
     }
     
     // Getters e Setters
-    public String getId() {
-        return id;
-    }
-    
-    public void setId(String id) {
-        this.id = id;
-    }
-    
     public String getNome() {
         return nome;
     }
@@ -53,19 +41,11 @@ public class Curso {
         this.nome = nome;
     }
     
-    public String getDescricao() {
-        return descricao;
+    public int getTotalCreditos() {
+        return totalCreditos;
     }
     
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    
-    public int getDuracao() {
-        return duracao;
-    }
-    
-    public void setDuracao(int duracao) {
-        this.duracao = duracao;
+    public void setTotalCreditos(int totalCreditos) {
+        this.totalCreditos = totalCreditos;
     }
 }

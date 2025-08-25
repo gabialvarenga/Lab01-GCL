@@ -2,27 +2,38 @@ package br.lab.model;
 
 import java.time.LocalDate;
 
+import br.lab.enums.StatusMatricula;
+import br.lab.enums.Tipo;
+
 public class Matricula {
     private int id;
     private LocalDate data;
-    private String status;
+    private StatusMatricula status;
+    private Tipo tipo;
     private Aluno aluno;
-    private Disciplina disciplina;
+    private Disciplina disciplina; 
     
     public Matricula() {
+        this.data = LocalDate.now();
+        this.status = StatusMatricula.ATIVA;
     }
     
-    public Matricula(int id, LocalDate data, String status, Aluno aluno, Disciplina disciplina) {
+    public Matricula(int id, Aluno aluno, Disciplina disciplina, Tipo tipo) {
         this.id = id;
-        this.data = data;
-        this.status = status;
+        this.data = LocalDate.now();
+        this.status = StatusMatricula.ATIVA;
+        this.tipo = tipo;
         this.aluno = aluno;
         this.disciplina = disciplina;
     }
     
     public void cancelar() {
-        this.status = "CANCELADA";
+        this.status = StatusMatricula.CANCELADA;
         System.out.println("Matrícula cancelada com sucesso.");
+    }
+    
+    public boolean isAtiva() {
+        return this.status == StatusMatricula.ATIVA;
     }
     
     // Getters e Setters
@@ -42,12 +53,20 @@ public class Matricula {
         this.data = data;
     }
     
-    public String getStatus() {
+    public StatusMatricula getStatus() {
         return status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(StatusMatricula status) {
         this.status = status;
+    }
+    
+    public Tipo getTipo() {
+        return tipo;
+    }
+    
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
     }
     
     public Aluno getAluno() {
