@@ -1,29 +1,37 @@
 package br.lab.model;
 
 import java.util.List;
+
+import br.lab.enums.Role;
+
 import java.util.ArrayList;
 
 public class Professor extends Usuario {
     private String registro;
     private String especialidade;
+    private List<Disciplina> disciplinas;
     
-    public Professor() {
+    public Professor() { 
         super();
+        this.disciplinas = new ArrayList<>();
     }
     
-    public Professor(String nome, String email, String senha, String registro, String especialidade) {
-        super(nome, email, senha);
+    public Professor(int id, String nome, String email, String senha, String registro, String especialidade) {
+        super(id, nome, email, senha, Role.PROFESSOR);
         this.registro = registro;
         this.especialidade = especialidade;
+        this.disciplinas = new ArrayList<>();
     }
     
-    public List<Aluno> visualizarListaDeAlunos() {
-        // Em um sistema real, isso consultaria um banco de dados
-        // Retornando uma lista vazia para demonstração
+    public List<Aluno> visualizarListaAlunos(Disciplina disciplina) {
+ 
+        if (disciplinas.contains(disciplina)) {
+            return disciplina.listarAlunos();
+        }
+   
         return new ArrayList<>();
     }
     
-    // Getters e Setters
     public String getRegistro() {
         return registro;
     }
@@ -38,5 +46,23 @@ public class Professor extends Usuario {
     
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
+    }
+    
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+    
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
+    
+    public void adicionarDisciplina(Disciplina disciplina) {
+        if (!disciplinas.contains(disciplina)) {
+            disciplinas.add(disciplina);
+        }
+    }
+    
+    public void removerDisciplina(Disciplina disciplina) {
+        disciplinas.remove(disciplina);
     }
 }
