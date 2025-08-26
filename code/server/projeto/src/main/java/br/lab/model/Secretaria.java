@@ -22,10 +22,10 @@ public class Secretaria extends Usuario {
         System.out.println("Gerenciando disciplinas...");
     }
     
-    public Curriculo gerarCurriculo(int ano, int periodo) {
+    public Curriculo gerarCurriculo(int ano, int semestre) {
 
-        System.out.println("Gerando currículo para " + ano + "." + periodo);
-        return new Curriculo(0, ano, periodo);
+        System.out.println("Gerando currículo para " + ano + "." + semestre);
+        return new Curriculo(0, ano, semestre);
     }
     
     public void gerenciarAluno() {

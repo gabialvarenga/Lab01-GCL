@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Curriculo {
     private int id;
     private int ano;
-    private int periodo;
+    private int semestre;
     private LocalDate periodoMatriculaInicio;
     private LocalDate periodoMatriculaFim;
     private List<Disciplina> disciplinasOfertadas;
@@ -16,10 +16,10 @@ public class Curriculo {
         this.disciplinasOfertadas = new ArrayList<>();
     }
     
-    public Curriculo(int id, int ano, int periodo) {
+    public Curriculo(int id, int ano, int semestre) {
         this.id = id;
         this.ano = ano;
-        this.periodo = periodo;
+        this.semestre = semestre;
         this.disciplinasOfertadas = new ArrayList<>();
     }
     
@@ -42,7 +42,7 @@ public class Curriculo {
     
     public void abrirPeriodoMatricula() {
         this.periodoMatriculaInicio = LocalDate.now();
-        this.periodoMatriculaFim = LocalDate.now().plusDays(15); // Exemplo: 15 dias para matrícula
+        this.periodoMatriculaFim = LocalDate.now().plusDays(15); 
         System.out.println("Período de matrícula aberto até " + periodoMatriculaFim);
     }
     
@@ -61,7 +61,6 @@ public class Curriculo {
             }
         }
     }
-    
    
     public int getId() {
         return id;
@@ -79,12 +78,12 @@ public class Curriculo {
         this.ano = ano;
     }
     
-    public int getPeriodo() {
-        return periodo;
+    public int getSemestre() {
+        return semestre;
     }
     
-    public void setPeriodo(int periodo) {
-        this.periodo = periodo;
+    public void setSemestre(int semestre) {
+        this.semestre = semestre;
     }
     
     public LocalDate getPeriodoMatriculaInicio() {
