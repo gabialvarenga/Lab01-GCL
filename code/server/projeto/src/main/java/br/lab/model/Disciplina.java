@@ -1,12 +1,12 @@
 package br.lab.model;
 
 import java.util.List;
-
+import java.io.Serializable;
 import br.lab.enums.Tipo;
-
 import java.util.ArrayList;
 
-public class Disciplina {
+public class Disciplina implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String codigo;
     private String nome;
     private int creditos;
@@ -15,8 +15,8 @@ public class Disciplina {
     private boolean ativo;
     private Tipo tipo;
     private int curriculoId;
-    private Professor professor;
-    private List<Aluno> alunos;
+    private transient Professor professor;
+    private transient List<Aluno> alunos;
     
     public static final int MIN_ALUNOS = 3;
     public static final int MAX_ALUNOS = 60;
@@ -137,5 +137,13 @@ public class Disciplina {
     
     public void setCurriculoId(int curriculoId) {
         this.curriculoId = curriculoId;
+    }
+    
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+    
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
     }
 }

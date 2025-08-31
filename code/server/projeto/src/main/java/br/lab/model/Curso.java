@@ -2,8 +2,10 @@ package br.lab.model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Curso {
+public class Curso implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nome;
     private int totalCreditos;
     private List<Disciplina> disciplinas;

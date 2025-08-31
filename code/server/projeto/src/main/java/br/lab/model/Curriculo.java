@@ -3,14 +3,16 @@ package br.lab.model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Curriculo {
+public class Curriculo implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private int ano;
     private int semestre;
     private LocalDate periodoMatriculaInicio;
     private LocalDate periodoMatriculaFim;
-    private List<Disciplina> disciplinasOfertadas;
+    private transient List<Disciplina> disciplinasOfertadas;
     
     public Curriculo() {
         this.disciplinasOfertadas = new ArrayList<>();

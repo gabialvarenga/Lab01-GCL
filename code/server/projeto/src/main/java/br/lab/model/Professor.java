@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Professor extends Usuario {
     private String registro;
     private String especialidade;
-    private List<Disciplina> disciplinas;
+    private transient List<Disciplina> disciplinas;
     
     public Professor() { 
         super();

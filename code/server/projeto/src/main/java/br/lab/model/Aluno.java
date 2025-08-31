@@ -11,7 +11,7 @@ import br.lab.enums.Tipo;
 
 public class Aluno extends Usuario {
     private String matricula;
-    private Map<Disciplina, Tipo> disciplinasMatriculadas;
+    private transient Map<Disciplina, Tipo> disciplinasMatriculadas;
     
     public Aluno() {
         super();
@@ -98,5 +98,9 @@ public class Aluno extends Usuario {
     
     public Map<Disciplina, Tipo> getDisciplinasMatriculadasMap() {
         return disciplinasMatriculadas;
+    }
+    
+    public void setDisciplinasMatriculadasMap(Map<Disciplina, Tipo> disciplinasMatriculadas) {
+        this.disciplinasMatriculadas = disciplinasMatriculadas;
     }
 }
