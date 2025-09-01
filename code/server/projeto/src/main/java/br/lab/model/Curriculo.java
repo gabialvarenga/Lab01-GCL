@@ -37,6 +37,11 @@ public class Curriculo implements Serializable {
     }
     
     public boolean isPeriodoMatriculaAberto() {
+        // Verificação de nulidade para evitar NullPointerException
+        if (periodoMatriculaInicio == null || periodoMatriculaFim == null) {
+            return false;
+        }
+        
         LocalDate hoje = LocalDate.now();
         return hoje.isAfter(periodoMatriculaInicio) && 
                hoje.isBefore(periodoMatriculaFim);
