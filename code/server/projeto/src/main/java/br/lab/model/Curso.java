@@ -34,7 +34,6 @@ public class Curso implements Serializable {
         return new ArrayList<>(disciplinas);
     }
     
-    // Getters e Setters
     public String getNome() {
         return nome;
     }

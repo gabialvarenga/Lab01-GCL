@@ -37,7 +37,6 @@ public class Curriculo implements Serializable {
     }
     
     public boolean isPeriodoMatriculaAberto() {
-        // Verificação de nulidade para evitar NullPointerException
         if (periodoMatriculaInicio == null || periodoMatriculaFim == null) {
             return false;
         }

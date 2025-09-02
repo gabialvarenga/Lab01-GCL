@@ -31,6 +31,17 @@ public class Professor extends Usuario {
    
         return new ArrayList<>();
     }
+
+
+    public void adicionarDisciplina(Disciplina disciplina) {
+        if (!disciplinas.contains(disciplina)) {
+            disciplinas.add(disciplina);
+        }
+    }
+    
+    public void removerDisciplina(Disciplina disciplina) {
+        disciplinas.remove(disciplina);
+    }
     
     public String getRegistro() {
         return registro;
@@ -55,14 +66,5 @@ public class Professor extends Usuario {
     public void setDisciplinas(List<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
-    
-    public void adicionarDisciplina(Disciplina disciplina) {
-        if (!disciplinas.contains(disciplina)) {
-            disciplinas.add(disciplina);
-        }
-    }
-    
-    public void removerDisciplina(Disciplina disciplina) {
-        disciplinas.remove(disciplina);
-    }
+
 }
