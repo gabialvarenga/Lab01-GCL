@@ -55,7 +55,7 @@ public class Secretaria extends Usuario {
             return false;
         }
         
-        // Verifica se o código já existe
+        
         if (SistemaService.getInstance().buscarDisciplinaPorCodigo(codigo) != null) {
             return false;
         }
@@ -65,10 +65,10 @@ public class Secretaria extends Usuario {
         
         SistemaService.getInstance().adicionarDisciplina(disciplina);
         
-        // Adiciona a disciplina ao professor
+       
         professor.adicionarDisciplina(disciplina);
         
-        // Adiciona a disciplina ao currículo
+       
         Curriculo curriculo = SistemaService.getInstance().getCurriculos()
             .stream()
             .filter(c -> c.getId() == curriculoId)
@@ -98,7 +98,7 @@ public class Secretaria extends Usuario {
             return false;
         }
         
-        // Verifica se já existe um currículo para o ano/semestre
+       
         if (SistemaService.getInstance().buscarCurriculo(ano, semestre) != null) {
             return false;
         }
@@ -155,12 +155,12 @@ public class Secretaria extends Usuario {
             return false;
         }
         
-        // Verifica se o email já existe
+
         if (SistemaService.getInstance().buscarProfessorPorEmail(email) != null) {
             return false;
         }
         
-        // Verifica se o registro já existe
+        
         if (SistemaService.getInstance().buscarProfessorPorRegistro(registro) != null) {
             return false;
         }
@@ -181,7 +181,7 @@ public class Secretaria extends Usuario {
             return false;
         }
         
-        // Verifica se o professor tem disciplinas
+       
         if (!professor.getDisciplinas().isEmpty()) {
             return false;
         }
@@ -199,12 +199,12 @@ public class Secretaria extends Usuario {
             return false;
         }
         
-        // Remove a disciplina do professor anterior (se houver)
+    
         if (disciplina.getProfessor() != null) {
             disciplina.getProfessor().removerDisciplina(disciplina);
         }
         
-        // Atribui a disciplina ao novo professor
+        
         disciplina.setProfessor(professor);
         professor.adicionarDisciplina(disciplina);
         
