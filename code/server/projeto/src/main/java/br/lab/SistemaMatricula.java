@@ -182,16 +182,19 @@ public class SistemaMatricula {
      * @return true para continuar executando, false para encerrar
      */
     private static boolean exibirMenuSecretaria() {
+        Secretaria secretaria = (Secretaria) usuarioLogado;
+        
         System.out.println("\n=== Menu da Secretaria ===");
         System.out.println("1. Gerenciar cursos");
         System.out.println("2. Gerenciar disciplinas");
         System.out.println("3. Gerenciar currículos");
         System.out.println("4. Gerenciar períodos de matrícula");
-        System.out.println("5. Ver todas as disciplinas");
-        System.out.println("6. Ver todos os alunos");
-        System.out.println("7. Ver todos os professores");
-        System.out.println("8. Fazer logout");
-        System.out.println("9. Sair");
+        System.out.println("5. Gerenciar professores");
+        System.out.println("6. Ver todas as disciplinas");
+        System.out.println("7. Ver todos os alunos");
+        System.out.println("8. Ver todos os professores");
+        System.out.println("9. Fazer logout");
+        System.out.println("10. Sair");
         System.out.print("Escolha uma opção: ");
         
         int opcao = lerInteiro();
@@ -210,19 +213,22 @@ public class SistemaMatricula {
                 gerenciarPeriodosMatricula();
                 return true;
             case 5:
-                verTodasDisciplinas();
+                gerenciarProfessores();
                 return true;
             case 6:
-                verTodosAlunos();
+                verTodasDisciplinas(secretaria);
                 return true;
             case 7:
-                verTodosProfessores();
+                verTodosAlunos(secretaria);
                 return true;
             case 8:
+                verTodosProfessores(secretaria);
+                return true;
+            case 9:
                 System.out.println("Logout realizado com sucesso!");
                 usuarioLogado = null;
                 return true;
-            case 9:
+            case 10:
                 return false;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
@@ -507,6 +513,8 @@ public class SistemaMatricula {
      * Gerencia os cursos do sistema
      */
     private static void gerenciarCursos() {
+        Secretaria secretaria = (Secretaria) usuarioLogado;
+        
         System.out.println("\n=== Gerenciar Cursos ===");
         System.out.println("1. Listar cursos");
         System.out.println("2. Adicionar curso");
@@ -517,10 +525,10 @@ public class SistemaMatricula {
         
         switch (opcao) {
             case 1:
-                listarCursos();
+                listarCursos(secretaria);
                 break;
             case 2:
-                adicionarCurso();
+                adicionarCurso(secretaria);
                 break;
             case 3:
                 return;
@@ -532,8 +540,8 @@ public class SistemaMatricula {
     /**
      * Lista todos os cursos do sistema
      */
-    private static void listarCursos() {
-        List<Curso> cursos = service.getCursos();
+    private static void listarCursos(Secretaria secretaria) {
+        List<Curso> cursos = secretaria.listarCursos();
         
         if (cursos.isEmpty()) {
             System.out.println("Não há cursos cadastrados.");
@@ -551,7 +559,7 @@ public class SistemaMatricula {
     /**
      * Adiciona um novo curso ao sistema
      */
-    private static void adicionarCurso() {
+    private static void adicionarCurso(Secretaria secretaria) {
         System.out.println("\n=== Adicionar Curso ===");
         
         System.out.print("Nome: ");
@@ -560,16 +568,19 @@ public class SistemaMatricula {
         System.out.print("Total de Créditos: ");
         int creditos = lerInteiro();
         
-        Curso curso = new Curso(nome, creditos);
-        service.adicionarCurso(curso);
-        
-        System.out.println("Curso adicionado com sucesso!");
+        if (secretaria.adicionarCurso(nome, creditos)) {
+            System.out.println("Curso adicionado com sucesso!");
+        } else {
+            System.out.println("Erro ao adicionar curso. Verifique os dados informados.");
+        }
     }
     
     /**
      * Gerencia as disciplinas do sistema
      */
     private static void gerenciarDisciplinas() {
+        Secretaria secretaria = (Secretaria) usuarioLogado;
+        
         System.out.println("\n=== Gerenciar Disciplinas ===");
         System.out.println("1. Listar disciplinas");
         System.out.println("2. Adicionar disciplina");
@@ -580,10 +591,10 @@ public class SistemaMatricula {
         
         switch (opcao) {
             case 1:
-                verTodasDisciplinas();
+                verTodasDisciplinas(secretaria);
                 break;
             case 2:
-                adicionarDisciplina();
+                adicionarDisciplina(secretaria);
                 break;
             case 3:
                 return;
@@ -595,8 +606,8 @@ public class SistemaMatricula {
     /**
      * Lista todas as disciplinas do sistema
      */
-    private static void verTodasDisciplinas() {
-        List<Disciplina> disciplinas = service.getDisciplinas();
+    private static void verTodasDisciplinas(Secretaria secretaria) {
+        List<Disciplina> disciplinas = secretaria.listarDisciplinas();
         
         if (disciplinas.isEmpty()) {
             System.out.println("Não há disciplinas cadastradas.");
@@ -622,18 +633,18 @@ public class SistemaMatricula {
     /**
      * Adiciona uma nova disciplina ao sistema
      */
-    private static void adicionarDisciplina() {
+    private static void adicionarDisciplina(Secretaria secretaria) {
         System.out.println("\n=== Adicionar Disciplina ===");
         
         // Verifica se há professores cadastrados
-        List<Professor> professores = service.getProfessores();
+        List<Professor> professores = secretaria.listarProfessores();
         if (professores.isEmpty()) {
             System.out.println("Não há professores cadastrados. Impossível adicionar disciplina.");
             return;
         }
         
         // Verifica se há currículos cadastrados
-        List<Curriculo> curriculos = service.getCurriculos();
+        List<Curriculo> curriculos = secretaria.listarCurriculos();
         if (curriculos.isEmpty()) {
             System.out.println("Não há currículos cadastrados. Impossível adicionar disciplina.");
             return;
@@ -702,17 +713,12 @@ public class SistemaMatricula {
         
         Curriculo curriculo = curriculos.get(currOpcao - 1);
         
-        // Cria a disciplina
-        Disciplina disciplina = new Disciplina(codigo, nome, creditos, cargaHoraria, professor, tipo);
-        disciplina.setCurriculoId(curriculo.getId());
-        
-        // Adiciona a disciplina
-        service.adicionarDisciplina(disciplina);
-        curriculo.adicionarDisciplina(disciplina);
-        professor.adicionarDisciplina(disciplina);
-        
-        System.out.println("Disciplina adicionada com sucesso!");
-        service.salvarDados();
+        // Adiciona a disciplina usando o método da secretaria
+        if (secretaria.adicionarDisciplina(codigo, nome, creditos, cargaHoraria, professor, tipo, curriculo.getId())) {
+            System.out.println("Disciplina adicionada com sucesso!");
+        } else {
+            System.out.println("Erro ao adicionar disciplina. Verifique se o código não está duplicado.");
+        }
     }
     
     /**
@@ -878,8 +884,8 @@ public class SistemaMatricula {
     /**
      * Lista todos os alunos do sistema
      */
-    private static void verTodosAlunos() {
-        List<Aluno> alunos = service.getAlunos();
+    private static void verTodosAlunos(Secretaria secretaria) {
+        List<Aluno> alunos = secretaria.listarAlunos();
         
         if (alunos.isEmpty()) {
             System.out.println("Não há alunos cadastrados.");
@@ -902,8 +908,8 @@ public class SistemaMatricula {
     /**
      * Lista todos os professores do sistema
      */
-    private static void verTodosProfessores() {
-        List<Professor> professores = service.getProfessores();
+    private static void verTodosProfessores(Secretaria secretaria) {
+        List<Professor> professores = secretaria.listarProfessores();
         
         if (professores.isEmpty()) {
             System.out.println("Não há professores cadastrados.");
@@ -921,6 +927,270 @@ public class SistemaMatricula {
                 p.getEspecialidade(),
                 p.getDisciplinas().size()
             );
+        }
+    }
+    
+    /**
+     * Gerencia os professores do sistema
+     */
+    private static void gerenciarProfessores() {
+        Secretaria secretaria = (Secretaria) usuarioLogado;
+        
+        System.out.println("\n=== Gerenciar Professores ===");
+        System.out.println("1. Listar professores");
+        System.out.println("2. Adicionar professor");
+        System.out.println("3. Remover professor");
+        System.out.println("4. Atribuir disciplina a professor");
+        System.out.println("5. Remover disciplina de professor");
+        System.out.println("6. Voltar");
+        System.out.print("Escolha uma opção: ");
+        
+        int opcao = lerInteiro();
+        
+        switch (opcao) {
+            case 1:
+                verTodosProfessores(secretaria);
+                break;
+            case 2:
+                adicionarProfessor(secretaria);
+                break;
+            case 3:
+                removerProfessor(secretaria);
+                break;
+            case 4:
+                atribuirDisciplinaProfessor(secretaria);
+                break;
+            case 5:
+                removerDisciplinaProfessor(secretaria);
+                break;
+            case 6:
+                return;
+            default:
+                System.out.println("Opção inválida.");
+        }
+    }
+    
+    /**
+     * Adiciona um novo professor ao sistema
+     */
+    private static void adicionarProfessor(Secretaria secretaria) {
+        System.out.println("\n=== Adicionar Professor ===");
+        
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();
+        
+        System.out.print("Registro: ");
+        String registro = scanner.nextLine();
+        
+        System.out.print("Especialidade: ");
+        String especialidade = scanner.nextLine();
+        
+        if (secretaria.adicionarProfessor(nome, email, senha, registro, especialidade)) {
+            System.out.println("Professor adicionado com sucesso!");
+        } else {
+            System.out.println("Erro ao adicionar professor. Verifique se o email ou registro não estão duplicados.");
+        }
+    }
+    
+    /**
+     * Remove um professor do sistema
+     */
+    private static void removerProfessor(Secretaria secretaria) {
+        List<Professor> professores = secretaria.listarProfessores();
+        
+        if (professores.isEmpty()) {
+            System.out.println("Não há professores cadastrados.");
+            return;
+        }
+        
+        System.out.println("\n=== Remover Professor ===");
+        System.out.println("Professores cadastrados:");
+        
+        for (int i = 0; i < professores.size(); i++) {
+            Professor p = professores.get(i);
+            System.out.printf("%d. %s (%s) - %d disciplina(s)%n", 
+                i + 1, p.getNome(), p.getRegistro(), p.getDisciplinas().size());
+        }
+        
+        System.out.print("\nDigite o número do professor a ser removido: ");
+        int opcao = lerInteiro();
+        
+        if (opcao < 1 || opcao > professores.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Professor professor = professores.get(opcao - 1);
+        
+        System.out.print("Confirma a remoção do professor " + professor.getNome() + "? (S/N): ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("S")) {
+            if (secretaria.removerProfessor(professor)) {
+                System.out.println("Professor removido com sucesso!");
+            } else {
+                System.out.println("Este professor tem disciplinas atribuídas. Remova as disciplinas primeiro.");
+            }
+        } else {
+            System.out.println("Remoção cancelada.");
+        }
+    }
+    
+    /**
+     * Atribui uma disciplina a um professor
+     */
+    private static void atribuirDisciplinaProfessor(Secretaria secretaria) {
+        List<Professor> professores = secretaria.listarProfessores();
+        List<Disciplina> disciplinas = secretaria.listarDisciplinas();
+        
+        if (professores.isEmpty()) {
+            System.out.println("Não há professores cadastrados.");
+            return;
+        }
+        
+        if (disciplinas.isEmpty()) {
+            System.out.println("Não há disciplinas cadastradas.");
+            return;
+        }
+        
+        System.out.println("\n=== Atribuir Disciplina a Professor ===");
+        
+        // Seleciona o professor
+        System.out.println("Professores disponíveis:");
+        for (int i = 0; i < professores.size(); i++) {
+            Professor p = professores.get(i);
+            System.out.printf("%d. %s (%s)%n", i + 1, p.getNome(), p.getRegistro());
+        }
+        
+        System.out.print("Escolha o professor: ");
+        int profOpcao = lerInteiro();
+        
+        if (profOpcao < 1 || profOpcao > professores.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Professor professor = professores.get(profOpcao - 1);
+        
+        // Filtra disciplinas sem professor ou com professor diferente
+        List<Disciplina> disciplinasDisponiveis = new ArrayList<>();
+        for (Disciplina d : disciplinas) {
+            if (d.getProfessor() == null || !d.getProfessor().equals(professor)) {
+                disciplinasDisponiveis.add(d);
+            }
+        }
+        
+        if (disciplinasDisponiveis.isEmpty()) {
+            System.out.println("Não há disciplinas disponíveis para atribuir a este professor.");
+            return;
+        }
+        
+        // Seleciona a disciplina
+        System.out.println("\nDisciplinas disponíveis:");
+        for (int i = 0; i < disciplinasDisponiveis.size(); i++) {
+            Disciplina d = disciplinasDisponiveis.get(i);
+            String profAtual = d.getProfessor() != null ? d.getProfessor().getNome() : "Sem professor";
+            System.out.printf("%d. %s - %s (Atual: %s)%n", 
+                i + 1, d.getCodigo(), d.getNome(), profAtual);
+        }
+        
+        System.out.print("Escolha a disciplina: ");
+        int discOpcao = lerInteiro();
+        
+        if (discOpcao < 1 || discOpcao > disciplinasDisponiveis.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Disciplina disciplina = disciplinasDisponiveis.get(discOpcao - 1);
+        
+        if (secretaria.atribuirDisciplina(professor, disciplina)) {
+            System.out.println("Disciplina " + disciplina.getNome() + " atribuída ao professor " + professor.getNome() + " com sucesso!");
+        } else {
+            System.out.println("Erro ao atribuir disciplina.");
+        }
+    }
+    
+    /**
+     * Remove uma disciplina de um professor
+     */
+    private static void removerDisciplinaProfessor(Secretaria secretaria) {
+        List<Professor> professores = secretaria.listarProfessores();
+        
+        if (professores.isEmpty()) {
+            System.out.println("Não há professores cadastrados.");
+            return;
+        }
+        
+        System.out.println("\n=== Remover Disciplina de Professor ===");
+        
+        // Seleciona o professor
+        System.out.println("Professores com disciplinas:");
+        List<Professor> professoresComDisciplinas = new ArrayList<>();
+        
+        for (Professor p : professores) {
+            if (!p.getDisciplinas().isEmpty()) {
+                professoresComDisciplinas.add(p);
+            }
+        }
+        
+        if (professoresComDisciplinas.isEmpty()) {
+            System.out.println("Nenhum professor tem disciplinas atribuídas.");
+            return;
+        }
+        
+        for (int i = 0; i < professoresComDisciplinas.size(); i++) {
+            Professor p = professoresComDisciplinas.get(i);
+            System.out.printf("%d. %s (%s) - %d disciplina(s)%n", 
+                i + 1, p.getNome(), p.getRegistro(), p.getDisciplinas().size());
+        }
+        
+        System.out.print("Escolha o professor: ");
+        int profOpcao = lerInteiro();
+        
+        if (profOpcao < 1 || profOpcao > professoresComDisciplinas.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Professor professor = professoresComDisciplinas.get(profOpcao - 1);
+        
+        // Seleciona a disciplina
+        List<Disciplina> disciplinasProfessor = professor.getDisciplinas();
+        
+        System.out.println("\nDisciplinas do professor " + professor.getNome() + ":");
+        for (int i = 0; i < disciplinasProfessor.size(); i++) {
+            Disciplina d = disciplinasProfessor.get(i);
+            System.out.printf("%d. %s - %s%n", i + 1, d.getCodigo(), d.getNome());
+        }
+        
+        System.out.print("Escolha a disciplina a ser removida: ");
+        int discOpcao = lerInteiro();
+        
+        if (discOpcao < 1 || discOpcao > disciplinasProfessor.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Disciplina disciplina = disciplinasProfessor.get(discOpcao - 1);
+        
+        System.out.print("Confirma a remoção da disciplina " + disciplina.getNome() + " do professor " + professor.getNome() + "? (S/N): ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("S")) {
+            if (secretaria.removerDisciplinaDeProfessor(professor, disciplina)) {
+                System.out.println("Disciplina removida do professor com sucesso!");
+            } else {
+                System.out.println("Erro ao remover disciplina do professor.");
+            }
+        } else {
+            System.out.println("Remoção cancelada.");
         }
     }
     
