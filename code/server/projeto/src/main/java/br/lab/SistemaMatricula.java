@@ -190,11 +190,9 @@ public class SistemaMatricula {
         System.out.println("3. Gerenciar currículos");
         System.out.println("4. Gerenciar períodos de matrícula");
         System.out.println("5. Gerenciar professores");
-        System.out.println("6. Ver todas as disciplinas");
-        System.out.println("7. Ver todos os alunos");
-        System.out.println("8. Ver todos os professores");
-        System.out.println("9. Fazer logout");
-        System.out.println("10. Sair");
+        System.out.println("6. Gerenciar alunos");
+        System.out.println("7. Fazer logout");
+        System.out.println("8. Sair");
         System.out.print("Escolha uma opção: ");
         
         int opcao = lerInteiro();
@@ -216,19 +214,13 @@ public class SistemaMatricula {
                 gerenciarProfessores();
                 return true;
             case 6:
-                verTodasDisciplinas(secretaria);
+                gerenciarAlunos();
                 return true;
             case 7:
-                verTodosAlunos(secretaria);
-                return true;
-            case 8:
-                verTodosProfessores(secretaria);
-                return true;
-            case 9:
                 System.out.println("Logout realizado com sucesso!");
                 usuarioLogado = null;
                 return true;
-            case 10:
+            case 8:
                 return false;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
@@ -1188,6 +1180,131 @@ public class SistemaMatricula {
                 System.out.println("Disciplina removida do professor com sucesso!");
             } else {
                 System.out.println("Erro ao remover disciplina do professor.");
+            }
+        } else {
+            System.out.println("Remoção cancelada.");
+        }
+    }
+    
+    /**
+     * Gerencia os alunos do sistema
+     */
+    private static void gerenciarAlunos() {
+        Secretaria secretaria = (Secretaria) usuarioLogado;
+        
+        System.out.println("\n=== Gerenciar Alunos ===");
+        System.out.println("1. Listar alunos");
+        System.out.println("2. Adicionar aluno");
+        System.out.println("3. Remover aluno");
+        System.out.println("4. Voltar");
+        System.out.print("Escolha uma opção: ");
+        
+        int opcao = lerInteiro();
+        
+        switch (opcao) {
+            case 1:
+                listarAlunos(secretaria);
+                break;
+            case 2:
+                adicionarAluno(secretaria);
+                break;
+            case 3:
+                removerAluno(secretaria);
+                break;
+            case 4:
+                return;
+            default:
+                System.out.println("Opção inválida.");
+        }
+    }
+    
+    /**
+     * Lista todos os alunos do sistema
+     */
+    private static void listarAlunos(Secretaria secretaria) {
+        List<Aluno> alunos = secretaria.listarAlunos();
+        
+        if (alunos.isEmpty()) {
+            System.out.println("Não há alunos cadastrados.");
+            return;
+        }
+        
+        System.out.println("\n=== Alunos ===");
+        System.out.println("Matrícula | Nome | Email | Disciplinas Matriculadas");
+        
+        for (Aluno a : alunos) {
+            System.out.printf("%s | %s | %s | %d disciplina(s)%n",
+                a.getMatricula(),
+                a.getNome(),
+                a.getEmail(),
+                a.getDisciplinasMatriculadas().size()
+            );
+        }
+    }
+    
+    /**
+     * Adiciona um novo aluno ao sistema
+     */
+    private static void adicionarAluno(Secretaria secretaria) {
+        System.out.println("\n=== Adicionar Aluno ===");
+        
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();
+        
+        System.out.print("Matrícula: ");
+        String matricula = scanner.nextLine();
+        
+        if (secretaria.adicionarAluno(nome, email, senha, matricula)) {
+            System.out.println("Aluno adicionado com sucesso!");
+        } else {
+            System.out.println("Erro ao adicionar aluno. Verifique se o email ou matrícula não estão duplicados.");
+        }
+    }
+    
+    /**
+     * Remove um aluno do sistema
+     */
+    private static void removerAluno(Secretaria secretaria) {
+        List<Aluno> alunos = secretaria.listarAlunos();
+        
+        if (alunos.isEmpty()) {
+            System.out.println("Não há alunos cadastrados.");
+            return;
+        }
+        
+        System.out.println("\n=== Remover Aluno ===");
+        System.out.println("Alunos cadastrados:");
+        
+        for (int i = 0; i < alunos.size(); i++) {
+            Aluno a = alunos.get(i);
+            System.out.printf("%d. %s (%s) - %d disciplina(s)%n", 
+                i + 1, a.getNome(), a.getMatricula(), a.getDisciplinasMatriculadas().size());
+        }
+        
+        System.out.print("\nDigite o número do aluno a ser removido: ");
+        int opcao = lerInteiro();
+        
+        if (opcao < 1 || opcao > alunos.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        
+        Aluno aluno = alunos.get(opcao - 1);
+        
+        System.out.print("Confirma a remoção do aluno " + aluno.getNome() + "? (S/N): ");
+        String confirmacao = scanner.nextLine();
+        
+        if (confirmacao.equalsIgnoreCase("S")) {
+            if (secretaria.removerAluno(aluno)) {
+                System.out.println("Aluno removido com sucesso!");
+            } else {
+                System.out.println("Este aluno tem disciplinas matriculadas. Cancele as matrículas primeiro.");
             }
         } else {
             System.out.println("Remoção cancelada.");

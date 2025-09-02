@@ -237,4 +237,51 @@ public class Secretaria extends Usuario {
     public List<Aluno> listarAlunos() {
         return SistemaService.getInstance().getAlunos();
     }
+    
+    /**
+     * Adiciona um novo aluno
+     */
+    public boolean adicionarAluno(String nome, String email, String senha, String matricula) {
+        if (nome == null || nome.trim().isEmpty() ||
+            email == null || email.trim().isEmpty() ||
+            senha == null || senha.trim().isEmpty() ||
+            matricula == null || matricula.trim().isEmpty()) {
+            return false;
+        }
+        
+        // Verifica se o email já existe
+        if (SistemaService.getInstance().buscarAlunoPorEmail(email) != null) {
+            return false;
+        }
+        
+        // Verifica se a matrícula já existe
+        if (SistemaService.getInstance().buscarAlunoPorMatricula(matricula) != null) {
+            return false;
+        }
+        
+        int id = SistemaService.getInstance().getProfessores().size() + 
+                 SistemaService.getInstance().getAlunos().size() + 20;
+        
+        Aluno aluno = new Aluno(id, nome.trim(), email.trim(), senha.trim(), matricula.trim());
+        SistemaService.getInstance().adicionarAluno(aluno);
+        return true;
+    }
+    
+    /**
+     * Remove um aluno
+     */
+    public boolean removerAluno(Aluno aluno) {
+        if (aluno == null) {
+            return false;
+        }
+        
+        // Verifica se o aluno tem disciplinas matriculadas
+        if (!aluno.getDisciplinasMatriculadas().isEmpty()) {
+            return false;
+        }
+        
+        SistemaService.getInstance().getAlunos().remove(aluno);
+        SistemaService.getInstance().salvarDados();
+        return true;
+    }
 }
